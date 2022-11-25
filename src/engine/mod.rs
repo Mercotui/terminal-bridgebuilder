@@ -5,6 +5,8 @@ pub struct Engine {
 }
 
 impl Engine {
+    fn new() -> Engine {}
+
     fn get_objects(&self) -> &Vec<Object> {
         &self.objects
     }

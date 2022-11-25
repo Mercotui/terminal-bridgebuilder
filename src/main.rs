@@ -1,3 +1,4 @@
+use crate::engine::Engine;
 use crate::ui::GUI;
 use anyhow::Result;
 use clap::Parser;
@@ -25,7 +26,8 @@ fn main() -> Result<(), io::Error> {
     env_logger::init();
     let args = Cli::parse();
 
-    let objects = savefile::load(&args.path, &args.pattern);
+    let objects = savefile::load(&args.path);
+    let engine = Engine::new();
 
     let ui = GUI::new();
 

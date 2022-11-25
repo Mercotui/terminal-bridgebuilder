@@ -1,21 +1,19 @@
 use crate::object::Object;
 use anyhow::{anyhow, Context, Result};
-use std::fs::File;
-use std::io::prelude::*;
-use std::io::BufReader;
+use json;
+use std::fs;
 
-pub fn load(path: &std::path::PathBuf, pattern: &String) -> Result<Vec<Object>> {
-    let file =
-        File::open(path).with_context(|| format!("could not read file `{}`", path.display()))?;
-    let file_reader = BufReader::new(file);
+pub fn load(path: &std::path::PathBuf) -> Result<Vec<Object>> {
+    let json_string = fs::read_to_string(path)
+        .with_context(|| format!("Could not read file `{}`", path.display()))?;
 
-    for line_result in file_reader.lines() {
-        let line = line_result?;
-        if line.contains(pattern) {
-            println!("{}", line);
-        }
-    }
+    let json_data = json::parse(&json_string)
+        .with_context(|| format!("Could not parse as json `{}`", path.display()))?;
 
+    parse(json_data)
+}
+
+fn parse(root_object: json::JsonValue) -> Result<Vec<Object>> {
     Ok(vec![])
 }
 
