@@ -1,2 +1,3 @@
-# terminal_bridgebuilder
-A CLI bridgebuilder game
+# Terminal Bridgebuilder
+
+A bridgebuilder game for the terminal
