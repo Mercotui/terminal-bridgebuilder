@@ -13,14 +13,6 @@ pub struct VertexIndex(pub u64);
 #[derive(Debug, PartialEq, Eq)]
 pub struct Edge(pub VertexIndex, pub VertexIndex);
 
-/// A generic object in the scene
-#[derive(Debug, PartialEq)]
-pub struct Object {
-    pub name: String,
-    pub is_static: bool,
-    pub location: Coordinates,
-}
-
 /// A vehicle that will cross the bridge
 #[derive(Debug, PartialEq)]
 pub struct Vehicle {
@@ -47,6 +39,3 @@ pub struct Level {
     pub bridge: Bridge,
     pub vehicles: Vec<Vehicle>,
 }
-
-/// A level transformed into renderable objects
-pub struct Scene(Vec<Object>);
