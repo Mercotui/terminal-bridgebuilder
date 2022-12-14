@@ -1,12 +1,12 @@
 use crate::engine::Engine;
-use crate::ui::GUI;
+use crate::ui::Gui;
 use anyhow::Result;
 use clap::Parser;
-use log;
 
 mod engine;
 mod level;
 mod savefile;
+mod scene;
 mod ui;
 
 /// Search for a pattern in a file and display the lines that contain it.
@@ -26,12 +26,6 @@ fn main() -> Result<()> {
     let objects = savefile::load(&args.level_path)?;
     let engine = Engine::new();
 
-    let ui = GUI::new();
-
-    log::info!(
-        "Hello, world!\nThe arguments I got were path={}",
-        args.level_path.display()
-    );
-
-    Ok(())
+    let mut ui = Gui::new()?;
+    ui.run()
 }

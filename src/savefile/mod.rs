@@ -1,10 +1,9 @@
 #[cfg(test)]
 mod unittest;
 
-use crate::level::{Bridge, Coordinates, Edge, Level, Object, Vehicle, VertexIndex};
-use anyhow::{anyhow, ensure, Context, Result};
+use crate::level::{Bridge, Coordinates, Edge, Level, Vehicle, VertexIndex};
+use anyhow::{ensure, Context, Result};
 use json;
-use json::{parse, Array, JsonValue};
 use std::fs;
 
 pub fn load(path: &std::path::PathBuf) -> Result<Level> {
@@ -35,7 +34,8 @@ fn parse_level(root_object: &json::JsonValue) -> Result<Level> {
     })
 }
 
-fn parse_background(root_object: &json::JsonValue) -> Result<String> {
+fn parse_background(_root_object: &json::JsonValue) -> Result<String> {
+    // TODO(Menno 14.12.2022) Need to learn more about the TUI crate to know how we want the background to work
     Ok(String::from(""))
 }
 
@@ -86,7 +86,7 @@ fn parse_vertices(root_object: &json::JsonValue) -> Result<Vec<Coordinates>> {
     Ok(vertices)
 }
 
-fn parse_vertex_indices(root_object: &JsonValue) -> Result<Vec<VertexIndex>> {
+fn parse_vertex_indices(root_object: &json::JsonValue) -> Result<Vec<VertexIndex>> {
     let mut vertex_indices: Vec<VertexIndex> = vec![];
     for vertex_index_json in root_object.members() {
         vertex_indices.push(VertexIndex(
@@ -113,7 +113,7 @@ fn parse_edges(root_object: &json::JsonValue) -> Result<Vec<Edge>> {
     Ok(edges)
 }
 
-fn parse_coordinates(root_object: &JsonValue) -> Result<Coordinates> {
+fn parse_coordinates(root_object: &json::JsonValue) -> Result<Coordinates> {
     ensure!(
         root_object.len() == 2,
         "Coordinates should contain two numbers, instead found {}",
@@ -129,6 +129,6 @@ fn parse_coordinates(root_object: &JsonValue) -> Result<Coordinates> {
     })
 }
 
-pub fn save(objects: &Vec<Object>) -> Result<()> {
-    Err(anyhow!("Saving is not implemented yet. {:?}", objects))
-}
+// pub fn save(objects: &Vec<Object>) -> Result<()> {
+//     Err(anyhow!("Saving is not implemented yet. {:?}", objects))
+// }

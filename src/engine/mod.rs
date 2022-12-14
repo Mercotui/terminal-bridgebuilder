@@ -1,4 +1,8 @@
-use crate::level::{Level, Object};
+#[cfg(test)]
+mod unittest;
+
+use crate::level::Level;
+use crate::scene::Object;
 
 pub struct Engine {
     objects: Vec<Object>,
@@ -9,7 +13,7 @@ impl Engine {
         Engine { objects: vec![] }
     }
 
-    pub fn set_level(new_level: &Level) {}
+    pub fn set_level(_new_level: &Level) {}
 
     pub fn get_scene(&self) -> &Vec<Object> {
         &self.objects
