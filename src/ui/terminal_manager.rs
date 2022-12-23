@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
+    event::{self, DisableMouseCapture, EnableMouseCapture},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -10,6 +10,11 @@ use std::{
     time::{Duration, Instant},
 };
 use tui::{backend::CrosstermBackend, Terminal};
+
+pub enum TerminalManagerEvent {
+    TerminalEvent(event::Event),
+    TickEvent,
+}
 
 pub struct TerminalManager {
     pub terminal: Terminal<CrosstermBackend<io::Stdout>>,
@@ -44,25 +49,24 @@ impl TerminalManager {
         })
     }
 
-    pub fn next(&mut self) -> Result<bool> {
-        let tick_rate = Duration::from_millis(250);
-        let timeout = tick_rate
-            .checked_sub(self.last_tick.elapsed())
-            .unwrap_or_else(|| Duration::from_secs(0));
-        if crossterm::event::poll(timeout)? {
-            if let Event::Key(key) = event::read()? {
-                match key.code {
-                    KeyCode::Esc => return Ok(false),
-                    _ => {}
-                }
+    pub fn next(&mut self) -> Result<TerminalManagerEvent> {
+        loop {
+            let tick_rate = Duration::from_millis(250);
+
+            // check if it's time for a physics tick
+            if self.last_tick.elapsed() >= tick_rate {
+                self.last_tick = Instant::now();
+                return Ok(TerminalManagerEvent::TickEvent);
+            }
+
+            // wait for event or timeout
+            let timeout = tick_rate
+                .checked_sub(self.last_tick.elapsed())
+                .unwrap_or_else(|| Duration::from_secs(0));
+            if crossterm::event::poll(timeout)? {
+                return Ok(TerminalManagerEvent::TerminalEvent(event::read()?));
             }
         }
-        if self.last_tick.elapsed() >= tick_rate {
-            // app.on_tick();
-            self.last_tick = Instant::now();
-        }
-
-        Ok(true)
     }
 
     // TODO (Menno 14.12.2022) Figure out how to pass this closure as a parameter so that terminal doesn't have to be
