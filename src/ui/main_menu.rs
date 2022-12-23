@@ -3,14 +3,14 @@ use crate::ui::focus_scope::FocusScope;
 use anyhow::Result;
 use crossterm::event::{KeyCode, KeyEvent};
 use std::io::Stdout;
-use std::rc::Rc;
+use std::sync::Arc;
 use tui::backend::CrosstermBackend;
 use tui::layout::{Constraint, Direction, Layout};
 use tui::widgets::{Block, Borders};
 use tui::Frame;
 
 pub struct MainMenu {
-    stop_token: Rc<StopToken>,
+    stop_token: Arc<StopToken>,
     is_open: bool,
 }
 
@@ -31,7 +31,7 @@ impl FocusScope for MainMenu {
 }
 
 impl MainMenu {
-    pub fn new(stop_token: Rc<StopToken>) -> MainMenu {
+    pub fn new(stop_token: Arc<StopToken>) -> MainMenu {
         MainMenu {
             stop_token,
             is_open: false,
