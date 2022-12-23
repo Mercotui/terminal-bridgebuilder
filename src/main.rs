@@ -3,7 +3,9 @@ use crate::stop_token::StopToken;
 use crate::ui::Gui;
 use anyhow::Result;
 use clap::Parser;
-use std::rc::Rc;
+use signal_hook::{consts::SIGINT, iterator::Signals};
+use std::sync::Arc;
+use std::thread;
 
 mod engine;
 mod level;
@@ -22,14 +24,27 @@ struct Cli {
     verbose: clap_verbosity_flag::Verbosity,
 }
 
+fn install_signal_handler(stop_token: Arc<StopToken>) -> Result<()> {
+    let mut signals = Signals::new(&[SIGINT])?;
+
+    thread::spawn(move || {
+        for sig in signals.forever() {
+            stop_token.request_stop();
+        }
+    });
+    Ok(())
+}
+
 fn main() -> Result<()> {
     env_logger::init();
     let args = Cli::parse();
 
+    let stop_token = Arc::new(StopToken::new());
+    install_signal_handler(stop_token.clone());
+
     let _objects = savefile::load(&args.level_path)?;
     let _engine = Engine::new();
 
-    let stop_token = Rc::new(StopToken::new());
     let mut ui = Gui::new(stop_token.clone())?;
     ui.run()
 }

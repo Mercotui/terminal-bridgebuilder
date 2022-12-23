@@ -10,15 +10,15 @@ use crate::ui::main_menu::MainMenu;
 use crate::ui::scene_view::SceneView;
 use crate::ui::terminal_manager::TerminalManagerEvent;
 use anyhow::{Context, Result};
-use crossterm::event::{Event, KeyCode, KeyEvent, MouseEvent};
+use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers, MouseEvent};
 use std::io::Stdout;
-use std::rc::Rc;
+use std::sync::Arc;
 use terminal_manager::TerminalManager;
 use tui::backend::CrosstermBackend;
 use tui::Frame;
 
 pub struct Gui {
-    stop_token: Rc<StopToken>,
+    stop_token: Arc<StopToken>,
     terminal_manager: TerminalManager,
     main_menu: MainMenu,
     scene_view: SceneView,
@@ -30,6 +30,10 @@ impl FocusScope for Gui {
             KeyCode::Esc => {
                 // Escape can toggle the main menu
                 self.main_menu.open();
+                Ok(true)
+            }
+            KeyCode::Char('c') if key_event.modifiers == KeyModifiers::CONTROL => {
+                self.stop_token.request_stop();
                 Ok(true)
             }
             _ => {
@@ -49,7 +53,7 @@ impl FocusScope for Gui {
 }
 
 impl Gui {
-    pub fn new(stop_token: Rc<StopToken>) -> Result<Gui> {
+    pub fn new(stop_token: Arc<StopToken>) -> Result<Gui> {
         Ok(Gui {
             stop_token: stop_token.clone(),
             terminal_manager: TerminalManager::new().context("Can't setup terminal")?,

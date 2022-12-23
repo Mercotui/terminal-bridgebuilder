@@ -389,6 +389,7 @@ dependencies = [
  "env_logger",
  "json",
  "log",
+ "signal-hook",
  "tui",
 ]
 
