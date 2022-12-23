@@ -13,7 +13,6 @@ fn parse_level_test() {
             &json::parse(
                 r#"{
                   "background": {
-                
                   },
                   "foreground": {
                     "vertices": [[0, 1], [3, 1], [1, 1], [2, 1], [1.5, 1], [1.5, 2]],

@@ -28,7 +28,7 @@ fn install_signal_handler(stop_token: Arc<StopToken>) -> Result<()> {
     let mut signals = Signals::new(&[SIGINT])?;
 
     thread::spawn(move || {
-        for sig in signals.forever() {
+        for _sig in signals.forever() {
             stop_token.request_stop();
         }
     });
