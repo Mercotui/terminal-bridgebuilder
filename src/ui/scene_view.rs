@@ -12,7 +12,9 @@ impl SceneView {
         SceneView {}
     }
 
-    pub fn update(&self) -> Result<()> {
+    pub fn loadLevel() {}
+
+    pub fn physicsTick(&self) -> Result<()> {
         Ok(())
     }
 
@@ -20,17 +22,10 @@ impl SceneView {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .margin(1)
-            .constraints(
-                [
-                    Constraint::Percentage(10),
-                    Constraint::Percentage(80),
-                    Constraint::Percentage(10),
-                ]
-                .as_ref(),
-            )
+            .constraints([Constraint::Percentage(90), Constraint::Percentage(10)].as_ref())
             .split(frame.size());
 
-        let block = Block::default().title("Block").borders(Borders::ALL);
-        frame.render_widget(block, chunks[1]);
+        let block = Block::default().title("World View").borders(Borders::ALL);
+        frame.render_widget(block, chunks[0]);
     }
 }

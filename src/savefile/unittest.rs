@@ -1,9 +1,8 @@
 use crate::level::{Bridge, Coordinates, Edge, Level, Vehicle, VertexIndex};
 use crate::savefile::{
-    parse_background, parse_bridge, parse_coordinates, parse_edges, parse_level, parse_vehicle,
-    parse_vehicles, parse_vertex_indices, parse_vertices,
+    parse_bridge, parse_coordinates, parse_edges, parse_level, parse_vehicle, parse_vehicles,
+    parse_vertex_indices, parse_vertices,
 };
-use json::JsonValue::Array;
 use json::{array, JsonValue};
 
 #[test]

@@ -1,12 +1,15 @@
 use crate::engine::Engine;
+use crate::stop_token::StopToken;
 use crate::ui::Gui;
 use anyhow::Result;
 use clap::Parser;
+use std::rc::Rc;
 
 mod engine;
 mod level;
 mod savefile;
 mod scene;
+mod stop_token;
 mod ui;
 
 /// Search for a pattern in a file and display the lines that contain it.
@@ -23,9 +26,10 @@ fn main() -> Result<()> {
     env_logger::init();
     let args = Cli::parse();
 
-    let objects = savefile::load(&args.level_path)?;
-    let engine = Engine::new();
+    let _objects = savefile::load(&args.level_path)?;
+    let _engine = Engine::new();
 
-    let mut ui = Gui::new()?;
+    let stop_token = Rc::new(StopToken::new());
+    let mut ui = Gui::new(stop_token.clone())?;
     ui.run()
 }
