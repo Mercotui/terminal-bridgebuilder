@@ -1,5 +1,6 @@
 mod focus_scope;
 mod main_menu;
+mod mouse_area;
 mod scene_view;
 mod terminal_manager;
 mod world_menu;
@@ -7,6 +8,7 @@ mod world_menu;
 use crate::stop_token::StopToken;
 use crate::ui::focus_scope::FocusScope;
 use crate::ui::main_menu::MainMenu;
+use crate::ui::mouse_area::MouseArea;
 use crate::ui::scene_view::SceneView;
 use crate::ui::terminal_manager::TerminalManagerEvent;
 use anyhow::{Context, Result};
@@ -44,6 +46,16 @@ impl FocusScope for Gui {
     }
 
     fn determine_focus(&mut self) -> Result<Option<&mut dyn FocusScope>> {
+        if self.main_menu.is_open() {
+            Ok(Some(&mut self.main_menu))
+        } else {
+            Ok(None)
+        }
+    }
+}
+
+impl MouseArea for Gui {
+    fn determine_focus(&mut self) -> Result<Option<&mut dyn MouseArea>> {
         if self.main_menu.is_open() {
             Ok(Some(&mut self.main_menu))
         } else {
@@ -93,7 +105,7 @@ impl Gui {
                 return Ok(true);
             }
             Event::Mouse(mouse_event) => {
-                self.handle_mouse(mouse_event);
+                self.submit_mouse_event(&mouse_event);
                 return Ok(true);
             }
             Event::Resize(_, _) => {
@@ -104,9 +116,5 @@ impl Gui {
             // We don't handle this event, no need to redraw
             _ => return Ok(false),
         }
-    }
-
-    fn handle_mouse(&self, _mouse_event: MouseEvent) {
-        // print!("I got a mouse event called: {:?}", mouse_event)
     }
 }
