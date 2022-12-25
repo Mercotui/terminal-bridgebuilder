@@ -1,7 +1,7 @@
-use std::sync::atomic::{AtomicBool, Ordering};
-
 #[cfg(test)]
 mod unittest;
+
+use std::sync::atomic::{AtomicBool, Ordering};
 
 pub struct StopToken {
     stop_requested: AtomicBool,
