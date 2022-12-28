@@ -159,8 +159,16 @@ fn parse_vertices_test() {
     assert!(parse_vertices(&JsonValue::Null).is_err());
 
     // Test valid values
-    coordinates.push(array![0.0, 0.5]);
-    coordinates.push(array![42.42, 6.28]);
+    coordinates.push(array![0.0, 0.5]).unwrap();
+    coordinates.push(array![42.42, 6.28]).unwrap();
+
+    assert_eq!(
+        parse_vertices(&coordinates).unwrap(),
+        vec![
+            Coordinates { x: 0.0, y: 0.5 },
+            Coordinates { x: 42.42, y: 6.28 }
+        ]
+    )
 }
 
 #[test]
@@ -183,14 +191,14 @@ fn parse_edges_test() {
     let mut edges = array![];
 
     // Test that negative indices result in error
-    edges.push(array![1, -2]);
+    edges.push(array![1, -2]).unwrap();
     let result = parse_edges(&edges);
     assert!(result.is_err());
 
     // Test valid indices
     edges.clear();
-    edges.push(array![1, 50]);
-    edges.push(array![42, 100]);
+    edges.push(array![1, 50]).unwrap();
+    edges.push(array![42, 100]).unwrap();
     assert_eq!(
         parse_edges(&edges).unwrap(),
         vec![
