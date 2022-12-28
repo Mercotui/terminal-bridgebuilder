@@ -6,7 +6,7 @@ use crossterm::event::MouseEvent;
 use tui::layout::Rect;
 
 pub trait MouseArea {
-    fn handle_mouse_event(&mut self, mouse_event: &MouseEvent) -> Result<bool> {
+    fn handle_mouse_event(&mut self, _mouse_event: &MouseEvent) -> Result<bool> {
         // Default implementation doesn't handle any events
         Ok(false)
     }

@@ -23,6 +23,6 @@ impl StopToken {
     }
 
     pub fn keep_running(&self) -> bool {
-        !self.stop_requested.load(Ordering::Relaxed)
+        !self.is_stop_requested()
     }
 }

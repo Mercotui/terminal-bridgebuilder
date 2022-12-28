@@ -6,7 +6,7 @@ use crossterm::event::{KeyCode, KeyEvent, MouseButton, MouseEvent, MouseEventKin
 use std::io::Stdout;
 use std::sync::Arc;
 use tui::backend::CrosstermBackend;
-use tui::layout::{Constraint, Direction, Layout, Rect};
+use tui::layout::{Constraint, Layout, Rect};
 use tui::widgets::{Block, Borders};
 use tui::Frame;
 
