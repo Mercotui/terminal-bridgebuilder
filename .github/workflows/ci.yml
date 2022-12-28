@@ -8,8 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-# TODO(Menno 23.12.2022)
-#  RUSTFLAGS: -D warnings
+  RUSTFLAGS: -D warnings
 
 jobs:
   lint:

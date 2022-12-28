@@ -1,4 +1,3 @@
-use crate::engine::Engine;
 use crate::stop_token::StopToken;
 use crate::ui::Gui;
 use anyhow::Result;
@@ -40,11 +39,8 @@ fn main() -> Result<()> {
     let args = Cli::parse();
 
     let stop_token = Arc::new(StopToken::new());
-    install_signal_handler(stop_token.clone());
+    install_signal_handler(stop_token.clone())?;
 
-    let _objects = savefile::load(&args.level_path)?;
-    let _engine = Engine::new();
-
-    let mut ui = Gui::new(stop_token.clone())?;
+    let mut ui = Gui::new(stop_token.clone(), Some(&args.level_path))?;
     ui.run()
 }

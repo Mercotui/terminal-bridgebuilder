@@ -7,7 +7,7 @@ pub struct Coordinates {
 
 /// An index of a vertex
 #[derive(Debug, PartialEq, Eq)]
-pub struct VertexIndex(pub u64);
+pub struct VertexIndex(pub usize);
 
 /// An edge between two vertices
 #[derive(Debug, PartialEq, Eq)]
@@ -21,7 +21,7 @@ pub struct Vehicle {
 }
 
 /// A construction build from edges of multiple types
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Default)]
 pub struct Bridge {
     pub steel: Vec<Edge>,
     pub wood: Vec<Edge>,
@@ -30,7 +30,7 @@ pub struct Bridge {
 }
 
 /// A full level
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct Level {
     pub background: String,
     pub vertices: Vec<Coordinates>,

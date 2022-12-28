@@ -4,6 +4,7 @@ mod mouse_area;
 mod scene_view;
 mod terminal_manager;
 mod world_menu;
+mod world_view;
 
 use crate::stop_token::StopToken;
 use crate::ui::focus_scope::FocusScope;
@@ -12,12 +13,9 @@ use crate::ui::mouse_area::MouseArea;
 use crate::ui::scene_view::SceneView;
 use crate::ui::terminal_manager::TerminalManagerEvent;
 use anyhow::{Context, Result};
-use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers, MouseEvent};
-use std::io::Stdout;
+use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
 use std::sync::Arc;
 use terminal_manager::TerminalManager;
-use tui::backend::CrosstermBackend;
-use tui::Frame;
 
 pub struct Gui {
     stop_token: Arc<StopToken>,
@@ -65,12 +63,15 @@ impl MouseArea for Gui {
 }
 
 impl Gui {
-    pub fn new(stop_token: Arc<StopToken>) -> Result<Gui> {
+    pub fn new(
+        stop_token: Arc<StopToken>,
+        initial_level_path: Option<&std::path::PathBuf>,
+    ) -> Result<Gui> {
         Ok(Gui {
             stop_token: stop_token.clone(),
             terminal_manager: TerminalManager::new().context("Can't setup terminal")?,
             main_menu: MainMenu::new(stop_token),
-            scene_view: SceneView::new(),
+            scene_view: SceneView::new(initial_level_path)?,
         })
     }
 
@@ -79,8 +80,7 @@ impl Gui {
             let draw_needed;
             match self.terminal_manager.next()? {
                 TerminalManagerEvent::TickEvent => {
-                    draw_needed = true;
-                    self.scene_view.physicsTick().is_ok();
+                    draw_needed = self.scene_view.physics_tick()?;
                 }
                 TerminalManagerEvent::TerminalEvent(event) => {
                     draw_needed = self.handle_terminal_event(event)?
@@ -105,7 +105,7 @@ impl Gui {
                 return Ok(true);
             }
             Event::Mouse(mouse_event) => {
-                self.submit_mouse_event(&mouse_event);
+                self.submit_mouse_event(&mouse_event)?;
                 return Ok(true);
             }
             Event::Resize(_, _) => {

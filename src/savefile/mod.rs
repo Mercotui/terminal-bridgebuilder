@@ -2,7 +2,7 @@
 mod unittest;
 
 use crate::level::{Bridge, Coordinates, Edge, Level, Vehicle, VertexIndex};
-use anyhow::{ensure, Context, Result};
+use anyhow::{anyhow, ensure, Context, Result};
 use json;
 use std::fs;
 
@@ -91,7 +91,7 @@ fn parse_vertex_indices(root_object: &json::JsonValue) -> Result<Vec<VertexIndex
     for vertex_index_json in root_object.members() {
         vertex_indices.push(VertexIndex(
             vertex_index_json
-                .as_u64()
+                .as_usize()
                 .context("Not an unsigned integer")?,
         ));
     }
@@ -129,6 +129,6 @@ fn parse_coordinates(root_object: &json::JsonValue) -> Result<Coordinates> {
     })
 }
 
-// pub fn save(objects: &Vec<Object>) -> Result<()> {
-//     Err(anyhow!("Saving is not implemented yet. {:?}", objects))
-// }
+pub fn _save(level: &Level) -> Result<()> {
+    Err(anyhow!("Saving is not implemented yet. {:?}", level))
+}
