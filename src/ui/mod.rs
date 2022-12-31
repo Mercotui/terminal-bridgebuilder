@@ -1,6 +1,7 @@
 mod focus_scope;
 mod main_menu;
 mod mouse_area;
+mod popup;
 mod scene_view;
 mod terminal_manager;
 mod world_menu;
@@ -10,6 +11,7 @@ use crate::stop_token::StopToken;
 use crate::ui::focus_scope::FocusScope;
 use crate::ui::main_menu::MainMenu;
 use crate::ui::mouse_area::MouseArea;
+use crate::ui::popup::Popup;
 use crate::ui::scene_view::SceneView;
 use crate::ui::terminal_manager::TerminalManagerEvent;
 use anyhow::{Context, Result};
