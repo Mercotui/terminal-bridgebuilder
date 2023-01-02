@@ -1,4 +1,5 @@
 mod focus_scope;
+mod icon_button;
 mod main_menu;
 mod mouse_area;
 mod popup;
@@ -49,7 +50,7 @@ impl FocusScope for Gui {
         if self.main_menu.is_open() {
             Ok(Some(&mut self.main_menu))
         } else {
-            Ok(None)
+            Ok(Some(&mut self.scene_view))
         }
     }
 }
