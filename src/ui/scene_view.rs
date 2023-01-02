@@ -3,8 +3,7 @@ use crate::savefile;
 use crate::ui::world_menu::WorldMenu;
 use crate::ui::world_view::WorldView;
 use anyhow::Result;
-use std::io::Stdout;
-use tui::backend::CrosstermBackend;
+use tui::backend::Backend;
 use tui::layout::{Constraint, Direction, Layout};
 use tui::Frame;
 
@@ -41,7 +40,7 @@ impl SceneView {
         Ok(true)
     }
 
-    pub fn draw(&self, frame: &mut Frame<CrosstermBackend<Stdout>>) {
+    pub fn draw<B: Backend>(&self, frame: &mut Frame<B>) {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
             .margin(1)

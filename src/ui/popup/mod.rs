@@ -1,5 +1,4 @@
-use std::io::Stdout;
-use tui::backend::CrosstermBackend;
+use tui::backend::Backend;
 use tui::layout::Rect;
 use tui::widgets::Clear;
 use tui::Frame;
@@ -15,9 +14,9 @@ pub trait Popup {
 
     fn calculate_inner_area(&self, outer_area: Rect) -> Rect;
 
-    fn draw_inner(&mut self, frame: &mut Frame<CrosstermBackend<Stdout>>, inner_area: Rect);
+    fn draw_inner<B: Backend>(&mut self, frame: &mut Frame<B>, inner_area: Rect);
 
-    fn draw(&mut self, frame: &mut Frame<CrosstermBackend<Stdout>>) {
+    fn draw<B: Backend>(&mut self, frame: &mut Frame<B>) {
         let area = self.calculate_inner_area(frame.size());
         frame.render_widget(Clear, area);
         self.draw_inner(frame, area);

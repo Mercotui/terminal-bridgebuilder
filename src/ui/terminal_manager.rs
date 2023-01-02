@@ -71,9 +71,9 @@ impl TerminalManager {
 
     // TODO (Menno 14.12.2022) Figure out how to pass this closure as a parameter so that terminal doesn't have to be
     //  public.
-    // pub fn draw(
+    // pub fn draw<B: Backend>(
     //     &mut self,
-    //     draw_func: Box<dyn FnOnce(&mut Frame<CrosstermBackend<Stdout>>)>,
+    //     draw_func: Box<dyn FnOnce(&mut Frame<B>)>,
     // ) -> Result<()> {
     //     self.terminal.draw(draw_func)?;
     //     Ok(())
