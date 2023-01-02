@@ -4,12 +4,11 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-
 use std::{
     io,
     time::{Duration, Instant},
 };
-use tui::{backend::CrosstermBackend, Terminal};
+use tui::{backend::CrosstermBackend, Frame, Terminal};
 
 pub enum TerminalManagerEvent {
     TerminalEvent(event::Event),
@@ -17,8 +16,8 @@ pub enum TerminalManagerEvent {
 }
 
 pub struct TerminalManager {
-    pub terminal: Terminal<CrosstermBackend<io::Stdout>>,
-    pub last_tick: Instant,
+    terminal: Terminal<CrosstermBackend<io::Stdout>>,
+    last_tick: Instant,
 }
 
 impl Drop for TerminalManager {
@@ -69,13 +68,11 @@ impl TerminalManager {
         }
     }
 
-    // TODO (Menno 14.12.2022) Figure out how to pass this closure as a parameter so that terminal doesn't have to be
-    //  public.
-    // pub fn draw<B: Backend>(
-    //     &mut self,
-    //     draw_func: Box<dyn FnOnce(&mut Frame<B>)>,
-    // ) -> Result<()> {
-    //     self.terminal.draw(draw_func)?;
-    //     Ok(())
-    // }
+    pub fn draw<F>(&mut self, draw_func: F) -> Result<()>
+    where
+        F: FnOnce(&mut Frame<CrosstermBackend<io::Stdout>>),
+    {
+        self.terminal.draw(draw_func)?;
+        Ok(())
+    }
 }

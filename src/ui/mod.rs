@@ -79,18 +79,19 @@ impl Gui {
     }
 
     pub fn run(&mut self) -> Result<()> {
+        let mut draw_needed = true;
         while self.stop_token.keep_running() {
-            let draw_needed;
             match self.terminal_manager.next()? {
                 TerminalManagerEvent::TickEvent => {
-                    draw_needed = self.scene_view.physics_tick()?;
+                    draw_needed |= self.scene_view.physics_tick()?;
                 }
                 TerminalManagerEvent::TerminalEvent(event) => {
-                    draw_needed = self.handle_terminal_event(event)?
+                    draw_needed |= self.handle_terminal_event(event)?
                 }
             }
             if draw_needed {
-                self.terminal_manager.terminal.draw(|frame| {
+                draw_needed = false;
+                self.terminal_manager.draw(|frame| {
                     self.scene_view.draw(frame);
                     if self.main_menu.is_open() {
                         self.main_menu.draw(frame);
@@ -104,19 +105,18 @@ impl Gui {
     fn handle_terminal_event(&mut self, event: Event) -> Result<bool> {
         match event {
             Event::Key(key_event) => {
-                self.submit_key_event(&key_event)?;
-                return Ok(true);
+                // If the key event was handled, return true to redraw the UI
+                self.submit_key_event(&key_event)
             }
             Event::Mouse(mouse_event) => {
-                self.submit_mouse_event(&mouse_event)?;
-                return Ok(true);
+                // If the mouse event was handled, return true to redraw the UI
+                self.submit_mouse_event(&mouse_event)
             }
             Event::Resize(_, _) => {
                 // resized terminal requires a redraw
-                // TODO(Menno 23.12.2022) Figure out if redraw is really needed, maybe TUI crate handles it for us
                 return Ok(true);
             }
-            // We don't handle this event, no need to redraw
+            // We don't handle other events, no need to redraw
             _ => return Ok(false),
         }
     }
