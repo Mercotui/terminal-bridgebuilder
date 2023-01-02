@@ -2,13 +2,21 @@
 mod unittest;
 
 use crate::level::Level;
-use crate::scene::Scene;
-use anyhow::Result;
+use crate::scene::{Object, Scene};
+use anyhow::{ensure, Result};
+
+pub enum SimulationState {
+    Paused,
+    Running,
+    _Completed,
+    Cleared,
+}
 
 pub struct Engine {
     level: Level,
     static_scene: Scene,
     simulation_scene: Scene,
+    simulation_state: SimulationState,
 }
 
 impl Engine {
@@ -17,6 +25,7 @@ impl Engine {
             level: Level::default(),
             static_scene: Scene::default(),
             simulation_scene: Scene::default(),
+            simulation_state: SimulationState::Cleared,
         }
     }
 
@@ -34,13 +43,47 @@ impl Engine {
         &self.simulation_scene
     }
 
-    pub fn _reset_simulation(&mut self) {
+    pub fn start_simulation(&mut self) {
+        self.simulation_state = SimulationState::Running;
+    }
+
+    pub fn pause_simulation(&mut self) {
+        self.simulation_state = SimulationState::Paused;
+    }
+
+    pub fn reset_simulation(&mut self) {
         self.simulation_scene = self.static_scene.clone();
+        self.simulation_state = SimulationState::Cleared;
     }
 
-    pub fn simulate_scene_tick(&mut self) {
+    pub fn simulation_state(&self) -> &SimulationState {
+        &self.simulation_state
+    }
+
+    pub fn simulate_scene_tick(&mut self) -> Result<()> {
+        ensure!(matches!(self.simulation_state, SimulationState::Running));
         self.the_fancy_math();
+        Ok(())
     }
 
-    fn the_fancy_math(&mut self) {}
+    fn the_fancy_math(&mut self) {
+        const GRAVITY: f64 = 0.1;
+        for object in &mut self.simulation_scene.0 {
+            match object {
+                Object::WireObject(wire) => {
+                    wire.line.0.y -= GRAVITY;
+                    wire.line.1.y -= GRAVITY;
+                }
+                Object::BeamObject(beam) => {
+                    if !beam.is_static {
+                        beam.line.0.y -= GRAVITY;
+                        beam.line.1.y -= GRAVITY;
+                    }
+                }
+                Object::_VehicleObject(vehicle) => {
+                    vehicle.position.y -= GRAVITY;
+                }
+            }
+        }
+    }
 }

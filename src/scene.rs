@@ -121,7 +121,7 @@ impl Scene {
             &level.vertices,
             &level.bridge.road,
             BeamMaterial::Road,
-            true,
+            false,
         )?);
         scene.0.append(&mut Self::convert_beams(
             &level.vertices,
