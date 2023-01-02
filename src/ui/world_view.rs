@@ -1,6 +1,5 @@
 use crate::scene::{BeamMaterial, Object, Scene, WireMaterial};
-use std::io::Stdout;
-use tui::backend::CrosstermBackend;
+use tui::backend::Backend;
 use tui::layout::Rect;
 use tui::style::Color;
 use tui::widgets::canvas::{Canvas, Line};
@@ -9,12 +8,7 @@ use tui::Frame;
 pub struct WorldView {}
 
 impl WorldView {
-    pub(crate) fn draw(
-        &self,
-        scene: &Scene,
-        frame: &mut Frame<CrosstermBackend<Stdout>>,
-        area: Rect,
-    ) {
+    pub(crate) fn draw<B: Backend>(&self, scene: &Scene, frame: &mut Frame<B>, area: Rect) {
         let canvas = Canvas::default()
             // TODO(Menno 28.12.2022) Calculate bounding box of scene automatically, which should possibly only care about roads
             .x_bounds([0.0, 3.0])

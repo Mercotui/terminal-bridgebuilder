@@ -4,9 +4,8 @@ use crate::ui::mouse_area::MouseArea;
 use crate::ui::popup::Popup;
 use anyhow::{Context, Result};
 use crossterm::event::{KeyCode, KeyEvent, MouseButton, MouseEvent, MouseEventKind};
-use std::io::Stdout;
 use std::sync::Arc;
-use tui::backend::CrosstermBackend;
+use tui::backend::Backend;
 use tui::layout::{Constraint, Layout, Rect};
 use tui::style::{Color, Modifier, Style};
 use tui::widgets::{Block, Borders, List, ListItem, ListState};
@@ -86,7 +85,7 @@ impl MouseArea for MainMenu {
                     // TODO (Menno 25.12.2022) Remove this once proper menu items have been added
                     self.stop_token.request_stop();
                 } else {
-                    // if a click happens outside the menu, we close the menu
+                    // If a click happens outside the menu, we close the menu
                     self.close();
                 }
 
@@ -122,7 +121,7 @@ impl Popup for MainMenu {
         menu_layout[0]
     }
 
-    fn draw_inner(&mut self, frame: &mut Frame<CrosstermBackend<Stdout>>, inner_area: Rect) {
+    fn draw_inner<B: Backend>(&mut self, frame: &mut Frame<B>, inner_area: Rect) {
         self.area = inner_area;
 
         let list_items: Vec<ListItem> = self
@@ -150,9 +149,9 @@ impl MainMenu {
             is_open: false,
             state: ListState::default(),
             items: vec![
-                MenuItem("Back to game".to_string(), |menu| menu.close()),
-                MenuItem("Load Level".to_string(), |_menu| {}),
-                MenuItem("Exit to terminal".to_string(), |menu| {
+                MenuItem("Back to game (Esc)".to_string(), |menu| menu.close()),
+                MenuItem("Load Level (L)".to_string(), |_menu| {}),
+                MenuItem("Exit to terminal (Q)".to_string(), |menu| {
                     menu.stop_token.request_stop()
                 }),
             ],
