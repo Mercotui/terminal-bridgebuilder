@@ -4,9 +4,6 @@ use tui::layout::Rect;
 use tui::widgets::Clear;
 use tui::Frame;
 
-#[cfg(test)]
-mod unittest;
-
 pub trait Popup {
     fn open(&mut self);
     fn close(&mut self);
