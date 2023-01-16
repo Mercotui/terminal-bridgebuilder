@@ -13,11 +13,8 @@ pub trait FocusScope {
         let mut handled = false;
 
         // Forward the key event to a focused child
-        match self.determine_focus()? {
-            Some(focused) => {
-                handled = focused.submit_key_event(key_event)?;
-            }
-            None => {}
+        if let Some(focused) = self.determine_focus()? {
+            handled = focused.submit_key_event(key_event)?;
         }
 
         // If the key event was not handled by a child, than try to handle it ourselves

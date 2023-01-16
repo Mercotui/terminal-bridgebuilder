@@ -70,17 +70,17 @@ impl Engine {
         const GRAVITY: f64 = 0.1;
         for object in &mut self.simulation_scene.0 {
             match object {
-                Object::WireObject(wire) => {
+                Object::Wire(wire) => {
                     wire.line.0.y -= GRAVITY;
                     wire.line.1.y -= GRAVITY;
                 }
-                Object::BeamObject(beam) => {
+                Object::Beam(beam) => {
                     if !beam.is_static {
                         beam.line.0.y -= GRAVITY;
                         beam.line.1.y -= GRAVITY;
                     }
                 }
-                Object::_VehicleObject(vehicle) => {
+                Object::_Vehicle(vehicle) => {
                     vehicle.position.y -= GRAVITY;
                 }
             }

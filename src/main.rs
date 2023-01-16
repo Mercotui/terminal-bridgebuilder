@@ -26,7 +26,7 @@ struct Cli {
 }
 
 fn install_signal_handler(stop_token: Arc<StopToken>) -> Result<()> {
-    let mut signals = Signals::new(&[SIGINT])?;
+    let mut signals = Signals::new([SIGINT])?;
 
     thread::spawn(move || {
         for _sig in signals.forever() {
@@ -79,6 +79,6 @@ fn main() -> Result<()> {
     let stop_token = Arc::new(StopToken::new());
     install_signal_handler(stop_token.clone())?;
 
-    let mut ui = Gui::new(stop_token.clone(), Some(&args.level_path))?;
+    let mut ui = Gui::new(stop_token, Some(&args.level_path))?;
     ui.run()
 }
