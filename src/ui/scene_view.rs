@@ -1,6 +1,6 @@
 use crate::engine::{Engine, SimulationState};
 use crate::savefile;
-use crate::ui::focus_scope::FocusScope;
+use crate::ui::components::FocusScope;
 use crate::ui::world_menu::WorldMenu;
 use crate::ui::world_view::WorldView;
 use anyhow::Result;

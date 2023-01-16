@@ -1,5 +1,3 @@
-mod unittest;
-
 use anyhow::Result;
 use crossterm::event::KeyEvent;
 

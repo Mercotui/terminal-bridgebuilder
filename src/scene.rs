@@ -153,8 +153,8 @@ impl Scene {
     }
 
     fn convert_beams(
-        vertices: &Vec<level::Coordinates>,
-        edges: &Vec<level::Edge>,
+        vertices: &[level::Coordinates],
+        edges: &[level::Edge],
         material: BeamMaterial,
         is_static: bool,
     ) -> Result<Vec<Object>> {
@@ -173,8 +173,8 @@ impl Scene {
     }
 
     fn convert_wires(
-        vertices: &Vec<level::Coordinates>,
-        edges: &Vec<level::Edge>,
+        vertices: &[level::Coordinates],
+        edges: &[level::Edge],
         material: WireMaterial,
     ) -> Result<Vec<Object>> {
         let mut objects: Vec<Object> = vec![];

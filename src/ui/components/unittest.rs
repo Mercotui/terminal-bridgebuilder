@@ -1,4 +1,4 @@
-use crate::ui::mouse_area::MouseArea;
+use crate::ui::components::MouseArea;
 use crossterm::event::{KeyModifiers, MouseEvent, MouseEventKind};
 use tui::layout::Rect;
 
@@ -6,7 +6,7 @@ struct Testable {}
 impl MouseArea for Testable {}
 
 #[test]
-fn is_inside() {
+fn mouse_area_is_inside() {
     let testable = Testable {};
     let rect = Rect::new(2, 10, 5, 5);
     let mouse_event = MouseEvent {

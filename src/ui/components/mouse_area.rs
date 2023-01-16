@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod unittest;
-
 use anyhow::Result;
 use crossterm::event::MouseEvent;
 use tui::layout::Rect;
