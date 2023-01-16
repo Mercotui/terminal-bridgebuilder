@@ -34,7 +34,7 @@ pub struct IconButton {
     action_func: Box<dyn FnMut()>,
 }
 
-impl<'a> FocusScope for IconButton {
+impl FocusScope for IconButton {
     fn handle_key_event(&mut self, key_event: &KeyEvent) -> anyhow::Result<bool> {
         match key_event.code {
             KeyCode::Enter => {
@@ -47,7 +47,7 @@ impl<'a> FocusScope for IconButton {
     }
 }
 
-impl<'a> IconButton {
+impl IconButton {
     pub fn new(
         title: String,
         icon_draw_func: fn(draw_context: &mut Context),

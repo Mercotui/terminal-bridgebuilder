@@ -3,7 +3,6 @@ mod unittest;
 
 use crate::level::{Bridge, Coordinates, Edge, Level, Vehicle, VertexIndex};
 use anyhow::{anyhow, ensure, Context, Result};
-use json;
 use std::fs;
 
 pub fn load(path: &std::path::PathBuf) -> Result<Level> {

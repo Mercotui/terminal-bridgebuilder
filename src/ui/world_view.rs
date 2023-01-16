@@ -38,23 +38,21 @@ impl WorldView {
             .paint(|ctx| {
                 for object in &scene.0 {
                     match object {
-                        Object::WireObject(wire) => {
-                            let color;
-                            match wire.material {
-                                WireMaterial::Steel => color = Color::Gray,
-                            }
+                        Object::Wire(wire) => {
+                            let color = match wire.material {
+                                WireMaterial::Steel => Color::Gray,
+                            };
                             Self::draw_line(ctx, &wire.line, color)
                         }
-                        Object::BeamObject(beam) => {
-                            let color;
-                            match beam.material {
-                                BeamMaterial::Wood => color = Color::Red,
-                                BeamMaterial::Steel => color = Color::DarkGray,
-                                BeamMaterial::Road => color = Color::Black,
-                            }
+                        Object::Beam(beam) => {
+                            let color = match beam.material {
+                                BeamMaterial::Wood => Color::Red,
+                                BeamMaterial::Steel => Color::DarkGray,
+                                BeamMaterial::Road => Color::Black,
+                            };
                             Self::draw_line(ctx, &beam.line, color);
                         }
-                        Object::_VehicleObject(_) => {}
+                        Object::_Vehicle(_) => {}
                     }
                 }
             });

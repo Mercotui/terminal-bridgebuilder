@@ -105,19 +105,17 @@ impl Gui {
     fn handle_terminal_event(&mut self, event: Event) -> Result<bool> {
         match event {
             Event::Key(key_event) => {
-                // If the key event was handled, return true to redraw the UI
+                // If the key event was handled, returns true to redraw the UI
                 self.submit_key_event(&key_event)
             }
             Event::Mouse(mouse_event) => {
-                // If the mouse event was handled, return true to redraw the UI
+                // If the mouse event was handled, returns true to redraw the UI
                 self.submit_mouse_event(&mouse_event)
             }
-            Event::Resize(_, _) => {
-                // resized terminal requires a redraw
-                return Ok(true);
-            }
+            // resized terminal requires a redraw
+            Event::Resize(_, _) => Ok(true),
             // We don't handle other events, no need to redraw
-            _ => return Ok(false),
+            _ => Ok(false),
         }
     }
 }

@@ -74,9 +74,9 @@ pub struct _Vehicle {
 /// Generalization of all scene objects
 #[derive(Debug, Copy, Clone)]
 pub enum Object {
-    WireObject(Wire),
-    BeamObject(Beam),
-    _VehicleObject(_Vehicle),
+    Wire(Wire),
+    Beam(Beam),
+    _Vehicle(_Vehicle),
 }
 
 // TODO(Menno 28.12.2022) Implement ordering for objects
@@ -163,7 +163,7 @@ impl Scene {
             let vertex_a = Self::get_coordinates(&edge.0, vertices)?;
             let vertex_b = Self::get_coordinates(&edge.1, vertices)?;
 
-            objects.push(Object::BeamObject(Beam {
+            objects.push(Object::Beam(Beam {
                 material,
                 line: Line(vertex_a, vertex_b),
                 is_static,
@@ -182,7 +182,7 @@ impl Scene {
             let vertex_a = Self::get_coordinates(&edge.0, vertices)?;
             let vertex_b = Self::get_coordinates(&edge.1, vertices)?;
 
-            objects.push(Object::WireObject(Wire {
+            objects.push(Object::Wire(Wire {
                 material,
                 line: Line(vertex_a, vertex_b),
             }));
@@ -192,7 +192,7 @@ impl Scene {
 
     fn get_coordinates(
         index: &level::VertexIndex,
-        vertices: &Vec<level::Coordinates>,
+        vertices: &[level::Coordinates],
     ) -> Result<Coordinates> {
         Ok(Coordinates::new(
             vertices

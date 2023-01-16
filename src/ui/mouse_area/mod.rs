@@ -15,11 +15,8 @@ pub trait MouseArea {
         let mut handled = false;
 
         // Forward the mouse event to a focused child
-        match self.determine_focus()? {
-            Some(focused) => {
-                handled = focused.submit_mouse_event(mouse_event)?;
-            }
-            None => {}
+        if let Some(focused) = self.determine_focus()? {
+            handled = focused.submit_mouse_event(mouse_event)?;
         }
 
         // If the mouse event was not handled by a child, than try to handle it ourselves

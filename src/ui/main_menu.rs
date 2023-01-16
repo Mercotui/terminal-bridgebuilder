@@ -61,14 +61,11 @@ impl FocusScope for MainMenu {
                 Ok(true)
             }
             KeyCode::Enter => {
-                match self.state.selected() {
-                    Some(current_idx) => {
-                        self.items
-                            .get(current_idx)
-                            .context("Can not find menu item at specified index")?
-                            .1(self);
-                    }
-                    None => {}
+                if let Some(current_idx) = self.state.selected() {
+                    self.items
+                        .get(current_idx)
+                        .context("Can not find menu item at specified index")?
+                        .1(self);
                 }
                 Ok(true)
             }
