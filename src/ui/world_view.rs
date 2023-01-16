@@ -1,5 +1,5 @@
 use crate::scene::{BeamMaterial, Line, Object, Scene, WireMaterial};
-use crate::ui::focus_scope::FocusScope;
+use crate::ui::components::FocusScope;
 use crossterm::event::{KeyCode, KeyEvent};
 use tui::backend::Backend;
 use tui::layout::Rect;

@@ -1,5 +1,4 @@
-use crate::ui::focus_scope::FocusScope;
-use crate::ui::icon_button::IconButton;
+use crate::ui::components::{FocusScope, IconButton};
 use anyhow::Context;
 use crossterm::event::{KeyCode, KeyEvent};
 use tui::backend::Backend;
@@ -17,32 +16,26 @@ impl FocusScope for WorldMenu {
     fn handle_key_event(&mut self, key_event: &KeyEvent) -> anyhow::Result<bool> {
         match key_event.code {
             KeyCode::Left => {
-                match self.focused_button_idx {
-                    None => {}
-                    Some(idx) => {
-                        self.focused_button_idx = {
-                            if idx == 0 {
-                                // TODO(Menno 01.01.2023) Use full set of menu items
-                                Some(self.simulation_controls.len() - 1)
-                            } else {
-                                Some(idx - 1)
-                            }
+                if let Some(idx) = self.focused_button_idx {
+                    self.focused_button_idx = {
+                        if idx == 0 {
+                            // TODO(Menno 01.01.2023) Use full set of menu items
+                            Some(self.simulation_controls.len() - 1)
+                        } else {
+                            Some(idx - 1)
                         }
                     }
                 }
                 Ok(true)
             }
             KeyCode::Right => {
-                match self.focused_button_idx {
-                    None => {}
-                    Some(idx) => {
-                        self.focused_button_idx = {
-                            if idx == self.simulation_controls.len() - 1 {
-                                // TODO(Menno 01.01.2023) Use full set of menu items
-                                Some(0)
-                            } else {
-                                Some(idx + 1)
-                            }
+                if let Some(idx) = self.focused_button_idx {
+                    self.focused_button_idx = {
+                        if idx == self.simulation_controls.len() - 1 {
+                            // TODO(Menno 01.01.2023) Use full set of menu items
+                            Some(0)
+                        } else {
+                            Some(idx + 1)
                         }
                     }
                 }

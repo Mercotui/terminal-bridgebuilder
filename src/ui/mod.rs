@@ -1,21 +1,16 @@
-mod focus_scope;
-mod icon_button;
+mod components;
 mod main_menu;
-mod mouse_area;
-mod popup;
 mod scene_view;
 mod terminal_manager;
 mod world_menu;
 mod world_view;
 
 use crate::stop_token::StopToken;
-use crate::ui::focus_scope::FocusScope;
 use crate::ui::main_menu::MainMenu;
-use crate::ui::mouse_area::MouseArea;
-use crate::ui::popup::Popup;
 use crate::ui::scene_view::SceneView;
 use crate::ui::terminal_manager::TerminalManagerEvent;
 use anyhow::{Context, Result};
+use components::{FocusScope, MouseArea, Popup};
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
 use std::sync::Arc;
 use terminal_manager::TerminalManager;

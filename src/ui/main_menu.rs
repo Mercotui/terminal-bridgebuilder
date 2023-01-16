@@ -1,7 +1,5 @@
 use crate::stop_token::StopToken;
-use crate::ui::focus_scope::FocusScope;
-use crate::ui::mouse_area::MouseArea;
-use crate::ui::popup::Popup;
+use crate::ui::components::{FocusScope, MouseArea, Popup};
 use anyhow::{Context, Result};
 use crossterm::event::{KeyCode, KeyEvent, MouseButton, MouseEvent, MouseEventKind};
 use std::sync::Arc;
