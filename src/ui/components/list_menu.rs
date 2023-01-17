@@ -13,6 +13,8 @@ pub struct ListMenuItem {
     pub action_func: Box<dyn FnMut()>,
 }
 
+const BORDER_THICKNESS: u16 = 1;
+
 pub struct ListMenu {
     title: String,
     state: ListState,
@@ -81,8 +83,25 @@ impl FocusScope for ListMenu {
 
 impl MouseArea for ListMenu {
     fn handle_mouse_event(&mut self, mouse_event: &MouseEvent) -> Result<bool> {
+        let first_item_row = self.area.y + BORDER_THICKNESS;
         match mouse_event.kind {
-            MouseEventKind::Down(MouseButton::Left) => Ok(true),
+            MouseEventKind::Down(MouseButton::Left) => {
+                if mouse_event.row >= first_item_row {
+                    let index = (mouse_event.row - first_item_row) as usize;
+                    if let Some(item) = self.items.get_mut(index) {
+                        (item.action_func)();
+                    }
+                }
+                Ok(true)
+            }
+            MouseEventKind::Moved => {
+                if mouse_event.row >= first_item_row {
+                    let index = (mouse_event.row - first_item_row) as usize;
+                    self.state
+                        .select(Some(index.clamp(0, self.items.len() - 1)));
+                }
+                Ok(true)
+            }
             _ => Ok(false),
         }
     }
