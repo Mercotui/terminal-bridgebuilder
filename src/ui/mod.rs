@@ -11,7 +11,7 @@ use crate::ui::scene_view::SceneView;
 use crate::ui::terminal_manager::TerminalManagerEvent;
 use anyhow::{Context, Result};
 use components::{FocusScope, MouseArea, Popup};
-use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
+use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers, MouseEvent};
 use std::sync::Arc;
 use terminal_manager::TerminalManager;
 
@@ -31,6 +31,7 @@ impl FocusScope for Gui {
                 Ok(true)
             }
             KeyCode::Char('c') if key_event.modifiers == KeyModifiers::CONTROL => {
+                // TODO(Menno 17.01.2023) Should ask "Are you sure you want to quit"
                 self.stop_token.request_stop();
                 Ok(true)
             }
@@ -51,7 +52,7 @@ impl FocusScope for Gui {
 }
 
 impl MouseArea for Gui {
-    fn determine_focus(&mut self) -> Result<Option<&mut dyn MouseArea>> {
+    fn determine_focus(&mut self, _mouse_event: &MouseEvent) -> Result<Option<&mut dyn MouseArea>> {
         if self.main_menu.is_open() {
             Ok(Some(&mut self.main_menu))
         } else {
