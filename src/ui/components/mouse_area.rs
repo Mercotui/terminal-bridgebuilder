@@ -12,7 +12,7 @@ pub trait MouseArea {
         let mut handled = false;
 
         // Forward the mouse event to a focused child
-        if let Some(focused) = self.determine_focus()? {
+        if let Some(focused) = self.determine_focus(mouse_event)? {
             handled = focused.submit_mouse_event(mouse_event)?;
         }
 
@@ -23,7 +23,7 @@ pub trait MouseArea {
         Ok(handled)
     }
 
-    fn determine_focus(&mut self) -> Result<Option<&mut dyn MouseArea>> {
+    fn determine_focus(&mut self, _mouse_event: &MouseEvent) -> Result<Option<&mut dyn MouseArea>> {
         Ok(None)
     }
 
