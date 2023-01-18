@@ -1,5 +1,5 @@
 use crate::level;
-use anyhow::{Context, Result};
+use anyhow::{anyhow, Context, Result};
 
 /// Scene coordinates
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -59,13 +59,13 @@ pub struct Wire {
 /// The type of vehicle
 #[derive(Debug, Copy, Clone)]
 pub enum VehicleType {
-    _Bus,
-    _Car,
+    Bus,
+    Car,
 }
 
 /// A vehicle that can self propel along a road
 #[derive(Debug, Copy, Clone)]
-pub struct _Vehicle {
+pub struct Vehicle {
     pub vehicle_type: VehicleType,
     pub position: Coordinates,
     pub rotation: f64,
@@ -76,7 +76,7 @@ pub struct _Vehicle {
 pub enum Object {
     Wire(Wire),
     Beam(Beam),
-    _Vehicle(_Vehicle),
+    Vehicle(Vehicle),
 }
 
 // TODO(Menno 28.12.2022) Implement ordering for objects
@@ -116,6 +116,11 @@ impl Scene {
             true,
         )?);
 
+        // Add Vehicles
+        scene
+            .0
+            .append(&mut Self::convert_vehicles(&level.vehicles)?);
+
         // Add all bridge members
         scene.0.append(&mut Self::convert_beams(
             &level.vertices,
@@ -150,6 +155,26 @@ impl Scene {
         //     .sort_by(|a, b| a..partial_cmp(&b.depth()).unwrap_or(Ordering::Less));
 
         Ok(scene)
+    }
+
+    fn convert_vehicles(vehicles: &[level::Vehicle]) -> Result<Vec<Object>> {
+        let mut objects: Vec<Object> = vec![];
+        for vehicle in vehicles {
+            objects.push(Object::Vehicle(Vehicle {
+                vehicle_type: Self::get_vehicle_type(&vehicle.name)?,
+                position: Coordinates::new(&vehicle.position),
+                rotation: vehicle.rotation,
+            }));
+        }
+        Ok(objects)
+    }
+
+    fn get_vehicle_type(name: &String) -> Result<VehicleType> {
+        match name.as_str() {
+            "car" => Ok(VehicleType::Car),
+            "bus" => Ok(VehicleType::Bus),
+            _ => Err(anyhow!("Not a vehicle type: {}", name)),
+        }
     }
 
     fn convert_beams(

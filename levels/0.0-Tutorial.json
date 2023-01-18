@@ -17,7 +17,8 @@
     "vehicles": [
       {
         "type": "car",
-        "position": [0.5, 1]
+        "position": [0.5, 1],
+        "rotation": 0.0
       }
     ]
   }

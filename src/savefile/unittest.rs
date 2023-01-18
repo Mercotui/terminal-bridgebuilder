@@ -29,7 +29,8 @@ fn parse_level_test() {
                     "vehicles": [
                       {
                         "type": "car",
-                        "position": [0.5, 1]
+                        "position": [0.5, 1],
+                        "rotation": 0.0
                       }
                     ]
                   }
@@ -73,7 +74,8 @@ fn parse_level_test() {
             ],
             vehicles: vec![Vehicle {
                 name: "car".to_string(),
-                position: Coordinates { x: 0.5, y: 1.0 }
+                position: Coordinates { x: 0.5, y: 1.0 },
+                rotation: 0.0
             }],
         }
     );
@@ -122,10 +124,10 @@ fn parse_vehicles_test() {
     // Test valid values
     assert_eq!(parse_vehicles(
         &json::parse(
-            r#"[{"type": "car", "position": [5.0, 6.66]}, {"type": "bus", "position": [10.0, 20.0]}]"#
+            r#"[{"type": "car", "position": [5.0, 6.66], "rotation": 90}, {"type": "bus", "position": [10.0, 20.0], "rotation": 180}]"#
         ).unwrap()).unwrap()
-               , vec![Vehicle { name: "car".to_string(), position: Coordinates { x: 5.0, y: 6.66,  } },
-                      Vehicle { name: "bus".to_string(), position: Coordinates { x: 10.0, y: 20.0, } }]);
+               , vec![Vehicle { name: "car".to_string(), position: Coordinates { x: 5.0, y: 6.66,  }, rotation: 90.0 },
+                      Vehicle { name: "bus".to_string(), position: Coordinates { x: 10.0, y: 20.0, }, rotation: 180.0 }]);
 }
 
 #[test]
@@ -134,19 +136,24 @@ fn parse_vehicle_test() {
     assert!(parse_vehicle(&JsonValue::Null).is_err());
 
     // Test that a non-string name value results in an error
-    assert!(
-        parse_vehicle(&json::parse(r#"{"type": 42, "position": [1.2, 2.5]}"#).unwrap()).is_err()
-    );
+    assert!(parse_vehicle(
+        &json::parse(r#"{"type": 42, "position": [1.2, 2.5], "rotation":45}"#).unwrap()
+    )
+    .is_err());
 
     // Test that missing coordinates results in an error
     assert!(parse_vehicle(&json::parse(r#"{"type": "hey"}"#).unwrap()).is_err());
 
     // Test valid value
     assert_eq!(
-        parse_vehicle(&json::parse(r#"{"type": "hey", "position": [1.2, 2.5]}"#).unwrap()).unwrap(),
+        parse_vehicle(
+            &json::parse(r#"{"type": "hey", "position": [1.2, 2.5], "rotation": 42}"#).unwrap()
+        )
+        .unwrap(),
         Vehicle {
             name: "hey".to_string(),
             position: Coordinates { x: 1.2, y: 2.5 },
+            rotation: 42.0
         }
     );
 }

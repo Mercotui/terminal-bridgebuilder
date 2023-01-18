@@ -80,8 +80,10 @@ impl Engine {
                         beam.line.1.y -= GRAVITY;
                     }
                 }
-                Object::_Vehicle(vehicle) => {
+                Object::Vehicle(vehicle) => {
                     vehicle.position.y -= GRAVITY;
+                    // rotate by one degree
+                    vehicle.rotation += 1.0;
                 }
             }
         }

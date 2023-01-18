@@ -52,7 +52,13 @@ impl WorldView {
                             };
                             Self::draw_line(ctx, &beam.line, color);
                         }
-                        Object::_Vehicle(_) => {}
+                        Object::Vehicle(vehicle) => ctx.draw(&canvas::Rectangle {
+                            x: vehicle.position.x,
+                            y: vehicle.position.y,
+                            width: 0.3,
+                            height: 0.2,
+                            color: Color::LightYellow,
+                        }),
                     }
                 }
             });

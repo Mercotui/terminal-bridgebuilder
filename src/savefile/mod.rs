@@ -69,6 +69,9 @@ fn parse_vehicle(root_object: &json::JsonValue) -> Result<Vehicle> {
             .context("Vehicle type was not string")?
             .to_string(),
         position: parse_coordinates(&root_object["position"])?,
+        rotation: root_object["rotation"]
+            .as_f64()
+            .context("Vehicle rotation is not a number")?,
     })
 }
 
