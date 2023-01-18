@@ -18,6 +18,7 @@ pub struct Edge(pub VertexIndex, pub VertexIndex);
 pub struct Vehicle {
     pub name: String,
     pub position: Coordinates,
+    pub rotation: f64,
 }
 
 /// A construction build from edges of multiple types
