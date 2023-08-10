@@ -53,7 +53,7 @@ impl FocusScope for ListMenu {
                 self.state.select(Some(new_idx));
                 Ok(true)
             }
-            KeyCode::Enter => {
+            KeyCode::Enter | KeyCode::Char(' ') => {
                 if let Some(current_idx) = self.state.selected() {
                     let item = self
                         .items
