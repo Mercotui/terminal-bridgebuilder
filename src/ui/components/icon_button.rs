@@ -37,7 +37,7 @@ pub struct IconButton {
 impl FocusScope for IconButton {
     fn handle_key_event(&mut self, key_event: &KeyEvent) -> anyhow::Result<bool> {
         match key_event.code {
-            KeyCode::Enter => {
+            KeyCode::Enter | KeyCode::Char(' ') => {
                 // Enter activates the buttons action
                 (self.action_func)();
                 Ok(true)
