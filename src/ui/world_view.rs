@@ -1,12 +1,21 @@
-use crate::scene::{BeamMaterial, Line, Object, Scene, WireMaterial};
+use crate::scene::{BeamMaterial, Coordinates, Line, Object, Scene, VehicleType, WireMaterial};
 use crate::ui::components::FocusScope;
 use crossterm::event::{KeyCode, KeyEvent};
+use euclid;
+use iterwindows::IterArrayWindows;
+use tracing::error;
 use tui::backend::Backend;
 use tui::layout::Rect;
 use tui::style::Color;
 use tui::widgets::canvas;
 use tui::widgets::canvas::{Canvas, Context};
 use tui::Frame;
+
+struct WorldSpace;
+struct VehicleSpace;
+
+type VehiclePoint = euclid::Point2D<f64, VehicleSpace>;
+type VehiclePosition = euclid::Transform2D<f64, VehicleSpace, WorldSpace>;
 
 #[derive(Default)]
 pub struct WorldView {
@@ -42,7 +51,7 @@ impl WorldView {
                             let color = match wire.material {
                                 WireMaterial::Steel => Color::Gray,
                             };
-                            Self::draw_line(ctx, &wire.line, color)
+                            Self::draw_line(ctx, &wire.line, color);
                         }
                         Object::Beam(beam) => {
                             let color = match beam.material {
@@ -52,13 +61,15 @@ impl WorldView {
                             };
                             Self::draw_line(ctx, &beam.line, color);
                         }
-                        Object::Vehicle(vehicle) => ctx.draw(&canvas::Rectangle {
-                            x: vehicle.position.x,
-                            y: vehicle.position.y,
-                            width: 0.3,
-                            height: 0.2,
-                            color: Color::LightYellow,
-                        }),
+                        Object::Vehicle(vehicle) => match vehicle.vehicle_type {
+                            VehicleType::Bus => {
+                                //TODO(Menno 06.11.2023) Add bus rendering
+                                error!("Bus rendering not implemented");
+                            }
+                            VehicleType::Car => {
+                                Self::draw_car(ctx, vehicle.position, vehicle.rotation)
+                            }
+                        },
                     }
                 }
             });
@@ -73,5 +84,35 @@ impl WorldView {
             y2: line.1.y,
             color,
         });
+    }
+
+    fn draw_car(context: &mut Context, position: Coordinates, rotation: f64) {
+        let rotation: euclid::Angle<f64> = euclid::Angle::degrees(rotation);
+        let translation: euclid::Vector2D<f64, WorldSpace> =
+            euclid::Vector2D::new(position.x, position.y);
+        let world_transformation: VehiclePosition =
+            euclid::Transform2D::rotation(rotation).then_translate(translation);
+        let car_body: Vec<VehiclePoint> = vec![
+            euclid::point2(-0.1, 0.1),
+            euclid::point2(0.1, 0.1),
+            euclid::point2(0.1, 0.2),
+            euclid::point2(0.04, 0.2),
+            euclid::point2(0.0, 0.3),
+            euclid::point2(-0.08, 0.3),
+            euclid::point2(-0.1, 0.2),
+            euclid::point2(-0.1, 0.1),
+        ];
+
+        for [point_1, point_2] in car_body.iter().array_windows() {
+            let world_point_1 = world_transformation.transform_point(*point_1);
+            let world_point_2 = world_transformation.transform_point(*point_2);
+            context.draw(&canvas::Line {
+                x1: world_point_1.x,
+                y1: world_point_1.y,
+                x2: world_point_2.x,
+                y2: world_point_2.y,
+                color: Color::LightYellow,
+            });
+        }
     }
 }

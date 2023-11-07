@@ -82,8 +82,8 @@ impl Engine {
                 }
                 Object::Vehicle(vehicle) => {
                     vehicle.position.y -= GRAVITY;
-                    // rotate by one degree
-                    vehicle.rotation += 1.0;
+                    // hardcoded rotate by three degrees
+                    vehicle.rotation -= 3.0;
                 }
             }
         }
