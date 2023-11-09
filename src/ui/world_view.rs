@@ -92,6 +92,7 @@ impl WorldView {
             euclid::Vector2D::new(position.x, position.y);
         let world_transformation: VehiclePosition =
             euclid::Transform2D::rotation(rotation).then_translate(translation);
+
         let car_body: Vec<VehiclePoint> = vec![
             euclid::point2(-0.1, 0.1),
             euclid::point2(0.1, 0.1),
@@ -103,6 +104,36 @@ impl WorldView {
             euclid::point2(-0.1, 0.1),
         ];
 
+        let tire: Vec<VehiclePoint> = vec![
+            euclid::point2(-0.02, 0.1),
+            euclid::point2(0.0, 0.0),
+            euclid::point2(0.02, 0.1),
+        ];
+
+        let tires: Vec<euclid::Translation2D<f64, VehicleSpace, VehicleSpace>> = vec![
+            euclid::Translation2D::new(-0.08, 0.0),
+            euclid::Translation2D::new(0.08, 0.0),
+        ];
+
+        // Draw tires first
+        for tire_location in tires {
+            for [tire_point_1, tire_point_2] in tire.iter().array_windows() {
+                let tire_world_point_1 = world_transformation
+                    .transform_point(tire_location.transform_point(*tire_point_1));
+                let tire_world_point_2 = world_transformation
+                    .transform_point(tire_location.transform_point(*tire_point_2));
+
+                context.draw(&canvas::Line {
+                    x1: tire_world_point_1.x,
+                    y1: tire_world_point_1.y,
+                    x2: tire_world_point_2.x,
+                    y2: tire_world_point_2.y,
+                    color: Color::DarkGray,
+                });
+            }
+        }
+
+        // Then overdraw the car body
         for [point_1, point_2] in car_body.iter().array_windows() {
             let world_point_1 = world_transformation.transform_point(*point_1);
             let world_point_2 = world_transformation.transform_point(*point_2);
